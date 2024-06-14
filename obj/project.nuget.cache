@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "8v1vIsGxJ8oo83ZSOmM8EXhd5anWVA/kXsRvn4xAD6o3it4P45GutzC+rlhLEp41j1L3khajZNpmOLfzbeC8tQ==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\justi\\source\\repos\\TrexRunner\\TrexRunner.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\justi\\.nuget\\packages\\monogame.content.builder.task\\3.8.1.303\\monogame.content.builder.task.3.8.1.303.nupkg.sha512",
+    "C:\\Users\\justi\\.nuget\\packages\\monogame.framework.desktopgl\\3.8.1.303\\monogame.framework.desktopgl.3.8.1.303.nupkg.sha512"
+  ],
+  "logs": []
+}

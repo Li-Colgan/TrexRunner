@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SourceFileCollection xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Profile>Reach</Profile>
+  <Platform>DesktopGL</Platform>
+  <Config />
+  <SourceFiles>
+    <File>C:/Users/justi/source/repos/TrexRunner/Content/button-press.mp3</File>
+    <File>C:/Users/justi/source/repos/TrexRunner/Content/hit.mp3</File>
+    <File>C:/Users/justi/source/repos/TrexRunner/Content/score-reached.mp3</File>
+    <File>C:/Users/justi/source/repos/TrexRunner/Content/TrexSpritesheet.png</File>
+  </SourceFiles>
+  <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+  </DestFiles>
+</SourceFileCollection>
