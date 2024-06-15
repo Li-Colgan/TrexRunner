@@ -99,5 +99,12 @@ namespace TrexRunner.Graphics
                 throw new ArgumentOutOfRangeException(nameof(index), "Animation frame at index " + index + " does not exist.");
             return _frames[index];
         }
+
+        //clears frames
+        public void Clear()
+        {
+            Stop();
+            _frames.Clear();
+        }
     }
 }
