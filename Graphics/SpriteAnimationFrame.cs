@@ -8,9 +8,10 @@ namespace TrexRunner.Graphics
 {
     public class SpriteAnimationFrame
     {
+        //field
         private Sprite _sprite;
         
-
+        //properties
         public Sprite Sprite { 
             //same as get{return _sprite}
             get => _sprite; 
@@ -24,6 +25,7 @@ namespace TrexRunner.Graphics
         }
         public float TimeStamp { get; }
 
+        //constructor
         public SpriteAnimationFrame(Sprite sprite, float timeStamp)
         {
             Sprite = sprite;

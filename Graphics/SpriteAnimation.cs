@@ -21,6 +21,7 @@ namespace TrexRunner.Graphics
             }
         }
 
+        //fields and properties
         public SpriteAnimationFrame CurrentFrame
         {
             get
@@ -31,7 +32,6 @@ namespace TrexRunner.Graphics
                     .LastOrDefault();
             }
         }
-
         public float Duration
         {
             get
@@ -43,23 +43,34 @@ namespace TrexRunner.Graphics
         }
         public bool isPlaying { get; private set; }
         public float PlaybackProgress { get; private set; }
+        public bool ShouldLoop { get; set; }
 
+        //methods
+        //adds a new frame (with the sprite and timestamp) to an animation
         public void AddFrame(Sprite sprite, float timeStamp)
         {
             SpriteAnimationFrame frame = new SpriteAnimationFrame(sprite, timeStamp);
             _frames.Add(frame);
         }
 
+        //updates animation progress using elapsed time. loops if shouldloop is true.
         public void Update(GameTime gameTime)
         {
             if (isPlaying)
             {
                 PlaybackProgress += (float)gameTime.ElapsedGameTime.TotalSeconds;
                 if (PlaybackProgress > Duration)
-                    PlaybackProgress -= Duration;
+                {
+                    if(ShouldLoop)
+                        PlaybackProgress -= Duration;
+                    else
+                        Stop();
+                }
+                
             }
         }
 
+        //draws current animation frame if frames exist.
         public void Draw(SpriteBatch spriteBatch, Vector2 position)
         {
             SpriteAnimationFrame frame = CurrentFrame;
@@ -68,17 +79,20 @@ namespace TrexRunner.Graphics
                 frame.Sprite.Draw(spriteBatch, position);
         }
         
+        //plays animation
         public void Play()
         {
             isPlaying = true;
         }
 
+        //stops animation, resetting playback progress.
         public void Stop()
         {
             isPlaying = false;
             PlaybackProgress = 0;
         }
 
+        //retrieves a frame of an animation using its index
         public SpriteAnimationFrame GetFrame(int index)
         {
             if (index<0 || index >= _frames.Count)
