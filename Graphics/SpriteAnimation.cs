@@ -43,7 +43,7 @@ namespace TrexRunner.Graphics
         }
         public bool isPlaying { get; private set; }
         public float PlaybackProgress { get; private set; }
-        public bool ShouldLoop { get; set; }
+        public bool ShouldLoop { get; set; } = true;
 
         //methods
         //adds a new frame (with the sprite and timestamp) to an animation
