@@ -45,6 +45,7 @@ namespace TrexRunner
         private EntityManager _entityManager;
 
         private GroundManager _groundManager;
+        private ObstacleManager _obstacleManager;
 
         private KeyboardState _previousKeyboardState;
 
@@ -101,9 +102,12 @@ namespace TrexRunner
 
             _groundManager = new GroundManager(_spriteSheetTexture, _entityManager, _trex);
 
+            _obstacleManager = new ObstacleManager(_entityManager, _trex, _scoreBoard, _spriteSheetTexture);
+
             _entityManager.AddEntity(_trex);
             _entityManager.AddEntity(_groundManager);
             _entityManager.AddEntity(_scoreBoard);
+            _entityManager.AddEntity(_obstacleManager);
             _groundManager.Initialise();
         }
 
@@ -113,6 +117,7 @@ namespace TrexRunner
             {
                 State = GameState.Playing;
                 _trex.Initialise();
+                _obstacleManager.IsEnabled = true;
             }
         }
 
