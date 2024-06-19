@@ -39,6 +39,7 @@ namespace TrexRunner.Entities
         public const int TREX_DUCKING_SPRITE_ONE_POS_Y = 0;
         public const int TREX_DUCKING_SPRITE_ONE_POS_WIDTH = 59;
         private const float DROP_VELOCITY = 600f;
+        private const float START_SPEED = 240f;
 
 
 
@@ -55,6 +56,8 @@ namespace TrexRunner.Entities
         private SpriteAnimation _duckAnimation;
         private float _dropVelocity;
 
+        public event EventHandler JumpComplete;
+
 
         //properties
         public TrexState State { get; private set; }
@@ -62,6 +65,7 @@ namespace TrexRunner.Entities
         public bool isAlive { get; private set; }
         public float Speed { get; private set; }
         public int DrawOrder { get; set; }
+
 
         
 
@@ -96,6 +100,13 @@ namespace TrexRunner.Entities
             _duckAnimation.AddFrame(new Sprite(spriteSheet, TREX_DUCKING_SPRITE_ONE_POS_X + TREX_DUCKING_SPRITE_ONE_POS_WIDTH, TREX_DUCKING_SPRITE_ONE_POS_Y, TREX_DUCKING_SPRITE_ONE_POS_WIDTH, TREX_DEFAULT_SPRITE_POS_HEIGHT), RUN_ANIMATION_FRAME_LENGTH);
             _duckAnimation.AddFrame(_duckAnimation[0].Sprite, RUN_ANIMATION_FRAME_LENGTH * 2);
             _duckAnimation.Play();
+        }
+
+        public void Initialise() 
+        {
+
+            Speed = START_SPEED;
+            State = TrexState.Running;
         }
 
         //draw method
@@ -150,6 +161,8 @@ namespace TrexRunner.Entities
                     Position = new Vector2(Position.X, _startPosY);
                     _verticalVelocity = 0;
                     State = TrexState.Running;
+
+                    OnJumpComplete();
                 }
             }
             else if (State == TrexState.Running)
@@ -226,6 +239,12 @@ namespace TrexRunner.Entities
             _dropVelocity = DROP_VELOCITY;
             return true;
 
+        }
+
+        protected virtual void OnJumpComplete()
+        {
+            EventHandler handler = JumpComplete;
+            handler?.Invoke(this, EventArgs.Empty);
         }
     }
 }
