@@ -13,7 +13,7 @@ namespace TrexRunner.Graphics
         //variables
         public Texture2D Texture { get; private set; }
         public int X { get; set; }
-        private int Y { get; set; }
+        public int Y { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
 

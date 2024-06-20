@@ -21,7 +21,7 @@ namespace TrexRunner.Entities
         public const int LARGE_CACTUS_SPRITE_WIDTH = 25;
         public const int LARGE_CACTUS_SPRITE_X = 332;
         public const int LARGE_CACTUS_SPRITE_Y = 0;
-        private const int COLLISION_BOX_INSET = 8;
+        private const int COLLISION_BOX_INSET = 20;
 
         public override Rectangle CollisionBox
         {
