@@ -19,8 +19,11 @@ namespace TrexRunner.Entities
 
         public void Update(GameTime gameTime)
         {
+            
             foreach (IGameEntity entity in _entities)
             {
+                if (_entitiesToRemove.Contains(entity))
+                    continue;
                 entity.Update(gameTime);
             }
 
@@ -49,6 +52,7 @@ namespace TrexRunner.Entities
 
         public void AddEntity(IGameEntity entity)
         {
+
             if(entity == null)
                 throw new ArgumentNullException(nameof(entity), "Can't add a null entity.");
             _entitiesToAdd.Add(entity);

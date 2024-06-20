@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Diagnostics;
 using TrexRunner.Content.System;
 using TrexRunner.Entities;
 using TrexRunner.Graphics;
@@ -25,6 +26,7 @@ namespace TrexRunner
         private const float FADE_IN_ANIMATION_SPEED = 820f;
         private const int SCORE_BOARD_POS_X = WINDOW_WIDTH - 130;
         private const int SCORE_BOARD_POS_Y = 10;
+        
 
         //fields
         private GraphicsDeviceManager _graphics;
@@ -94,6 +96,7 @@ namespace TrexRunner
             _trex = new Trex(_spriteSheetTexture, new Vector2(TREX_START_POS_X, TREX_START_POS_Y), _sfxButtonPress);
             _trex.DrawOrder = 10;
             _trex.JumpComplete += trex_JumpComplete;
+            _trex.Died += trex_Died;
 
             _scoreBoard = new ScoreBoard(_spriteSheetTexture, new Vector2(SCORE_BOARD_POS_X, SCORE_BOARD_POS_Y), _trex);
             //_scoreBoard.Score = 498;
@@ -105,7 +108,8 @@ namespace TrexRunner
 
             _obstacleManager = new ObstacleManager(_entityManager, _trex, _scoreBoard, _spriteSheetTexture);
 
-            _gameOverScreen = new GameOverScreen(_spriteSheetTexture);
+            _gameOverScreen = new GameOverScreen(_spriteSheetTexture, this);
+            _gameOverScreen.Position = new Vector2(WINDOW_WIDTH / 2 - GameOverScreen.GAME_OVER_TEXTURE_POS_WIDTH/2, WINDOW_HEIGHT / 2 - 30);
 
             _entityManager.AddEntity(_trex);
             _entityManager.AddEntity(_groundManager);
@@ -113,6 +117,14 @@ namespace TrexRunner
             _entityManager.AddEntity(_obstacleManager);
             _entityManager.AddEntity(_gameOverScreen);
             _groundManager.Initialise();
+        }
+
+        private void trex_Died(object sender, EventArgs e)
+        {
+            State = GameState.GameOver;
+            _obstacleManager.IsEnabled = false;
+            _gameOverScreen.IsEnabled = true;
+            _sfxHit.Play();
         }
 
         private void trex_JumpComplete(object sender, EventArgs e)
@@ -182,6 +194,22 @@ namespace TrexRunner
             _trex.BeginJump();
             return true;
 
+        }
+
+        public bool Replay()
+        {
+            if (State != GameState.GameOver)
+                return false;
+
+            State = GameState.Playing;
+            _trex.Initialise();
+            _obstacleManager.Reset();
+            _obstacleManager.IsEnabled = true;
+            _gameOverScreen.IsEnabled = false;
+            _scoreBoard.Score = 0;
+            _groundManager.Initialise();
+            _inputController.TemptInputBlock();
+            return true;
         }
     }
 }

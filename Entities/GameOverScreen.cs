@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace TrexRunner.Entities
     {
         private const int GAME_OVER_TEXTURE_POS_X = 655;
         private const int GAME_OVER_TEXTURE_POS_Y = 14;
-        private const int GAME_OVER_TEXTURE_POS_WIDTH = 192;
+        public const int GAME_OVER_TEXTURE_POS_WIDTH = 192;
         private const int GAME_OVER_TEXTURE_POS_HEIGHT = 14;
 
         private const int BUTTON_TEXTURE_POS_X = 1;
@@ -23,6 +24,9 @@ namespace TrexRunner.Entities
 
         private Sprite _textSprite;
         private Sprite _buttonSprite;
+        private TrexRunnerGame _game;
+        KeyboardState _keyboardState;
+        KeyboardState _previousKeyboardState;
 
         public Vector2 Position { get; set; }
 
@@ -30,10 +34,13 @@ namespace TrexRunner.Entities
 
         private Vector2 ButtonPosition => Position + new Vector2(GAME_OVER_TEXTURE_POS_WIDTH / 2 - BUTTON_TEXTURE_POS_WIDTH / 2, GAME_OVER_TEXTURE_POS_HEIGHT + 20);
 
+        private Rectangle ButtonBounds =>
+            new Rectangle(ButtonPosition.ToPoint(), new Point(BUTTON_TEXTURE_POS_WIDTH, BUTTON_TEXTURE_POS_HEIGHT));
         public int DrawOrder => 100;
 
-        public GameOverScreen(Texture2D spriteSheet)
+        public GameOverScreen(Texture2D spriteSheet, TrexRunnerGame game)
         {
+            _game = game;
             _textSprite = new Sprite
             (
                 spriteSheet, 
@@ -50,6 +57,7 @@ namespace TrexRunner.Entities
                 BUTTON_TEXTURE_POS_WIDTH, 
                 BUTTON_TEXTURE_POS_HEIGHT
             );
+            
 
         }
 
@@ -65,6 +73,16 @@ namespace TrexRunner.Entities
         {
             if(!IsEnabled)
                 return;
+            MouseState mouseState = Mouse.GetState();
+            KeyboardState keyboardState = Keyboard.GetState();
+            bool isKeyPress = keyboardState.IsKeyDown(Keys.Up) || keyboardState.IsKeyDown(Keys.Space);
+            bool wasKeyPressed = _previousKeyboardState.IsKeyDown(Keys.Space) || _previousKeyboardState.IsKeyDown(Keys.Up);
+            if ((ButtonBounds.Contains(mouseState.Position) && mouseState.LeftButton == ButtonState.Pressed) 
+                || (wasKeyPressed && !isKeyPress))
+            {
+                _game.Replay();
+            }
+            _previousKeyboardState = keyboardState;
 
         }
     }

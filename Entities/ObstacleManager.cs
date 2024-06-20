@@ -8,6 +8,8 @@ namespace TrexRunner.Entities
 {
     public class ObstacleManager : IGameEntity
     {
+        private static readonly int[] FLYING_DINO_Y_POSITIONS = new int[] {90, 62, 24};
+
         private const float MIN_SPAWN_DISTANCE = 10;
         private const int MIN_OBSTACLE_DISTANCE = 10;
         private const int MAX_OBSTACLE_DISTANCE = 50;
@@ -16,6 +18,8 @@ namespace TrexRunner.Entities
         private const int SMALL_CACTUS_POS_Y = 94;
         private const int OBSTACLE_DRAW_ORDER = 12;
         private const int OBSTACLE_DESPAWN_POS_X = -200;
+        private const int FLYING_DINO_SPAWN_SCORE_MIN = 150;
+
         private double _lastSpawnScore = -1;
         private double _currentTargetDistance;
        
@@ -66,13 +70,37 @@ namespace TrexRunner.Entities
 
         private void SpawnRandomObstacle()
         {
+            int cactusSpawnRate = 75;
+            int flyingDinoSpawnRate = _scoreBoard.Score >= FLYING_DINO_SPAWN_SCORE_MIN ? 25:0;
+            int rng = _random.Next(0, cactusSpawnRate + flyingDinoSpawnRate + 1);
             Obstacle obstacle;
-            CactusGroup.GroupSize randomGroupSize = (CactusGroup.GroupSize)_random.Next((int)CactusGroup.GroupSize.Small, (int)CactusGroup.GroupSize.Large + 1);
-            bool isLarge = _random.NextDouble() > 0.5f;
-            float posY = isLarge ? LARGE_CACTUS_POS_Y : SMALL_CACTUS_POS_Y;
-            obstacle = new CactusGroup(_spriteSheet, isLarge, randomGroupSize, _trex, new Vector2(TrexRunnerGame.WINDOW_WIDTH, posY));
+
+            if (rng <= cactusSpawnRate)
+            {
+                CactusGroup.GroupSize randomGroupSize = (CactusGroup.GroupSize)_random.Next((int)CactusGroup.GroupSize.Small, (int)CactusGroup.GroupSize.Large + 1);
+                bool isLarge = _random.NextDouble() > 0.5f;
+                float posY = isLarge ? LARGE_CACTUS_POS_Y : SMALL_CACTUS_POS_Y;
+                obstacle = new CactusGroup(_spriteSheet, isLarge, randomGroupSize, _trex, new Vector2(TrexRunnerGame.WINDOW_WIDTH, posY));
+            }
+            else
+            {
+                int verticalPosIndex = _random.Next(0, FLYING_DINO_Y_POSITIONS.Length);
+                float posY = FLYING_DINO_Y_POSITIONS[verticalPosIndex];
+                obstacle = new FlyingDino(_trex, new Vector2(TrexRunnerGame.WINDOW_WIDTH, posY), _spriteSheet);
+            }
             obstacle.DrawOrder = OBSTACLE_DRAW_ORDER;
             _entityManager.AddEntity(obstacle);
+        }
+
+        public void Reset()
+        {
+            foreach(Obstacle obstacle in _entityManager.GetEntitiesOfType<Obstacle>())
+            {
+                _entityManager.RemoveEntity(obstacle);
+            }
+
+            _currentTargetDistance = 0;
+            _lastSpawnScore = -1;
         }
     }
 

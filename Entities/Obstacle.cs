@@ -8,7 +8,7 @@ using TrexRunner.Graphics;
 
 namespace TrexRunner.Entities
 {
-    public abstract class Obstacle : IGameEntity
+    public abstract class Obstacle : IGameEntity, ICollidable
     {
 
         //fields
@@ -17,7 +17,7 @@ namespace TrexRunner.Entities
         //properties
         public abstract Rectangle CollisionBox { get; }
         public int DrawOrder {get; set;}
-        public Vector2 Position { get; private set; }
+        public Vector2 Position { get; protected set; }
         
 
         protected Obstacle(Trex trex, Vector2 position)
@@ -33,6 +33,18 @@ namespace TrexRunner.Entities
         {
             float posX = Position.X - _trex.Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
             Position = new Vector2(posX, Position.Y);
+            CheckCollisions();
+        }
+
+        public void CheckCollisions()
+        {
+            Rectangle obstacleCollisionBox = CollisionBox;
+            Rectangle trexCollisionBox = _trex.CollisionBox;
+
+            if (obstacleCollisionBox.Intersects(trexCollisionBox))
+            {
+                _trex.Die();
+            }
         }
 
 

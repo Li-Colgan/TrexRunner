@@ -7,11 +7,11 @@ namespace TrexRunner.Entities
 {
     public class CactusGroup : Obstacle
     {
-        public enum GroupSize 
-        { 
-         Small = 0, 
-         Medium = 1,
-         Large = 2
+        public enum GroupSize
+        {
+            Small = 0,
+            Medium = 1,
+            Large = 2
         }
         public const int SMALL_CACTUS_SPRITE_HEIGHT = 36;
         public const int SMALL_CACTUS_SPRITE_WIDTH = 17;
@@ -21,9 +21,17 @@ namespace TrexRunner.Entities
         public const int LARGE_CACTUS_SPRITE_WIDTH = 25;
         public const int LARGE_CACTUS_SPRITE_X = 332;
         public const int LARGE_CACTUS_SPRITE_Y = 0;
+        private const int COLLISION_BOX_INSET = 8;
 
-        public override Rectangle CollisionBox => throw new NotImplementedException();
-
+        public override Rectangle CollisionBox
+        {
+            get
+            {
+                Rectangle box = new Rectangle((int)Math.Round(Position.X), (int)Math.Round(Position.Y), Sprite.Width, Sprite.Height);
+                box.Inflate(-COLLISION_BOX_INSET, -COLLISION_BOX_INSET);
+                return box;
+            }
+        }
         public bool IsLarge { get; }
         public GroupSize Size { get; }
         public Sprite Sprite { get; private set; }
