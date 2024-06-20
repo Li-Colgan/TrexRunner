@@ -93,7 +93,7 @@ namespace TrexRunner.Entities
                 if(State == TrexState.Ducking)
                 {
                     box.Y += DUCK_COLLISION_REDUCTION;
-                    box.Height -= 20;
+                    box.Height -= DUCK_COLLISION_REDUCTION;
                 }
                 return box;
             }

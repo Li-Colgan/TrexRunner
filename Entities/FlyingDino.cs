@@ -55,9 +55,11 @@ namespace TrexRunner.Entities
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            Position = new Vector2(Position.X - SPEED_PPS * (float)gameTime.ElapsedGameTime.TotalSeconds, Position.Y);
             if(_trex.IsAlive)
+            {
                 _animation.Update(gameTime);
+                Position = new Vector2(Position.X - SPEED_PPS * (float)gameTime.ElapsedGameTime.TotalSeconds, Position.Y);
+            }
         }
     }
 }

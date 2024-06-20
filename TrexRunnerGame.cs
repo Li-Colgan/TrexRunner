@@ -50,6 +50,8 @@ namespace TrexRunner
         private ObstacleManager _obstacleManager;
         private GameOverScreen _gameOverScreen;
 
+        private SkyManager _skyManager;
+
         private KeyboardState _previousKeyboardState;
 
         //props
@@ -98,7 +100,7 @@ namespace TrexRunner
             _trex.JumpComplete += trex_JumpComplete;
             _trex.Died += trex_Died;
 
-            _scoreBoard = new ScoreBoard(_spriteSheetTexture, new Vector2(SCORE_BOARD_POS_X, SCORE_BOARD_POS_Y), _trex);
+            _scoreBoard = new ScoreBoard(_spriteSheetTexture, new Vector2(SCORE_BOARD_POS_X, SCORE_BOARD_POS_Y), _trex, _sfxScoreReached);
             //_scoreBoard.Score = 498;
             //_scoreBoard.HighScore = 12345;
 
@@ -108,6 +110,7 @@ namespace TrexRunner
 
             _obstacleManager = new ObstacleManager(_entityManager, _trex, _scoreBoard, _spriteSheetTexture);
 
+            _skyManager = new SkyManager(_trex, _spriteSheetTexture, _entityManager, _scoreBoard);
             _gameOverScreen = new GameOverScreen(_spriteSheetTexture, this);
             _gameOverScreen.Position = new Vector2(WINDOW_WIDTH / 2 - GameOverScreen.GAME_OVER_TEXTURE_POS_WIDTH/2, WINDOW_HEIGHT / 2 - 30);
 
@@ -116,6 +119,7 @@ namespace TrexRunner
             _entityManager.AddEntity(_scoreBoard);
             _entityManager.AddEntity(_obstacleManager);
             _entityManager.AddEntity(_gameOverScreen);
+            _entityManager.AddEntity(_skyManager);
             _groundManager.Initialise();
         }
 
