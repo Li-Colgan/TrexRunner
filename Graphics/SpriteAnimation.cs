@@ -22,6 +22,7 @@ namespace TrexRunner.Graphics
         }
 
         //fields and properties
+        public int FrameCount => _frames.Count; 
         public SpriteAnimationFrame CurrentFrame
         {
             get

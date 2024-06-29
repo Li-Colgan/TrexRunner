@@ -309,5 +309,7 @@ namespace TrexRunner.Entities
             OnDied();
             return true;
         }
+
+        
     }
 }

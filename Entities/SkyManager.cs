@@ -10,6 +10,7 @@ namespace TrexRunner.Entities
 {
     public class SkyManager : IGameEntity, IDayNightCycle
     {
+        private const float EPSILON = 0.01f;
         private const int CLOUD_DRAW_ORDER = -1;
         private const int STAR_DRAW_ORDER = -3;
         private const int MOON_DRAW_ORDER = -2;
@@ -27,7 +28,7 @@ namespace TrexRunner.Entities
 
         private const int MOON_POS_Y = 20;
 
-        private const int NIGHT_TIME_SCORE = 700;
+        private const int NIGHT_TIME_SCORE = 50;
         private const int NIGHT_TIME_DURATION_SCORE = 250;
         private const float TRANSITION_DURATION = 2f;
 
@@ -40,34 +41,49 @@ namespace TrexRunner.Entities
         private readonly EntityManager _entityManager;
         private readonly ScoreBoard _scoreBoard;
         private readonly Texture2D _spriteSheet;
+        private Texture2D _invertedSpriteSheet;
         private readonly Trex _trex;
         private Moon _moon;
+        private Texture2D _overlay;
 
         private int _targetCloudDistance;
         private int _targetStarDistance;
 
         private Random _random;
+        private Color[] _textureData;
+        private Color[] _invertedTextureData;
+        public Color ClearColor => new Color(_normalisedScreenColor, _normalisedScreenColor, _normalisedScreenColor);
 
 
-        public int DrawOrder => 0;
+        public int DrawOrder => int.MaxValue;
 
         public int NightCount { get; private set; }
 
         public bool IsNight => _normalisedScreenColor < 0.5f;
+        private float OverlayVisibility => MathHelper.Clamp((0.25f - MathHelper.Distance(0.5f, _normalisedScreenColor)) / 0.25f, 0, 1);
 
-        public SkyManager(Trex trex, Texture2D spriteSheet, EntityManager entityManager, ScoreBoard scoreBoard)
+        public SkyManager(Trex trex, Texture2D spriteSheet, Texture2D invertedSpriteSheet, EntityManager entityManager, ScoreBoard scoreBoard)
         {
             _entityManager = entityManager;
             _scoreBoard = scoreBoard;
             _random = new Random();
             _spriteSheet = spriteSheet;
+            _invertedSpriteSheet = invertedSpriteSheet;
             _trex = trex;
+            _textureData = new Color[_spriteSheet.Width * _spriteSheet.Height];
+            _invertedTextureData = new Color[_invertedSpriteSheet.Width * _invertedSpriteSheet.Height];
+            _spriteSheet.GetData(_textureData);
+            _invertedSpriteSheet.GetData(_invertedTextureData);
+            _overlay = new Texture2D(spriteSheet.GraphicsDevice, 1, 1);
+            Color[] overlayData = new[] { Color.Gray };
+            _overlay.SetData(overlayData);
             
         }
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-
+            if(OverlayVisibility > EPSILON)
+                spriteBatch.Draw(_overlay, new Rectangle(0, 0, TrexRunnerGame.WINDOW_WIDTH, TrexRunnerGame.WINDOW_HEIGHT), Color.White * OverlayVisibility);
         }
 
         public void Update(GameTime gameTime)
@@ -90,7 +106,7 @@ namespace TrexRunner.Entities
                 else
                     _entityManager.RemoveEntity(skyObject);
             }
-            if(_previousScore / NIGHT_TIME_SCORE != _scoreBoard.DisplayScore / NIGHT_TIME_SCORE)
+            if(_previousScore != 0 && _previousScore < _scoreBoard.DisplayScore && _previousScore / NIGHT_TIME_SCORE != _scoreBoard.DisplayScore / NIGHT_TIME_SCORE)
             {
                 TransitionToNightTime();
 
@@ -100,8 +116,15 @@ namespace TrexRunner.Entities
             {
                 TransitionToDayTime();
             }
+
+            if (_scoreBoard.DisplayScore < NIGHT_TIME_SCORE && (IsNight || _isTransitioningToNight))
+            {
+                TransitionToDayTime();
+            }
+
             UpdateTransition(gameTime);
             _previousScore = _scoreBoard.DisplayScore;
+
         }
 
         private void UpdateTransition(GameTime gameTime)
@@ -109,17 +132,39 @@ namespace TrexRunner.Entities
             if (_isTransitioningToNight)
             {
                 _normalisedScreenColor -= (float)gameTime.ElapsedGameTime.TotalSeconds / TRANSITION_DURATION;
-                if (_normalisedScreenColor > 0)
+                if (_normalisedScreenColor < 0)
                     _normalisedScreenColor = 0;
+                if (_normalisedScreenColor < 0.5f)
+                {
+                    InvertTextures();
+                }
             }
             else if (_isTransitioningToDay)
             {
                 _normalisedScreenColor += (float)gameTime.ElapsedGameTime.TotalSeconds / TRANSITION_DURATION;
                 
-                if (_normalisedScreenColor < 1)
+                if (_normalisedScreenColor > 1)
                     _normalisedScreenColor = 1;
+                if (_normalisedScreenColor > 0.5f)
+                {
+                    InvertTextures();
+                }
             }
 
+
+        }
+        private void InvertTextures()
+        {
+            if(IsNight)
+            {
+                _spriteSheet.SetData(_invertedTextureData);
+            }
+            else
+            {
+                _spriteSheet.SetData(_textureData);
+            }
+            
+            
         }
 
         private bool TransitionToNightTime()

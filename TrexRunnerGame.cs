@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Diagnostics;
+using TrexRunner.Content.Extensions;
 using TrexRunner.Content.System;
 using TrexRunner.Entities;
 using TrexRunner.Graphics;
@@ -53,6 +54,7 @@ namespace TrexRunner
         private SkyManager _skyManager;
 
         private KeyboardState _previousKeyboardState;
+        private Texture2D _invertedSpriteSheet;
 
         //props
         public GameState State { get; private set; }
@@ -90,6 +92,8 @@ namespace TrexRunner
 
             //load spritesheet
             _spriteSheetTexture = Content.Load<Texture2D>(ASSET_NAME_SPRITESHEET);
+            _invertedSpriteSheet = _spriteSheetTexture.InvertColors(Color.Transparent); 
+
 
             _fadeInTexture = new Texture2D(GraphicsDevice, 1, 1);
             _fadeInTexture.SetData(new Color[] { Color.White });
@@ -110,7 +114,7 @@ namespace TrexRunner
 
             _obstacleManager = new ObstacleManager(_entityManager, _trex, _scoreBoard, _spriteSheetTexture);
 
-            _skyManager = new SkyManager(_trex, _spriteSheetTexture, _entityManager, _scoreBoard);
+            _skyManager = new SkyManager(_trex, _spriteSheetTexture, _invertedSpriteSheet, _entityManager, _scoreBoard);
             _gameOverScreen = new GameOverScreen(_spriteSheetTexture, this);
             _gameOverScreen.Position = new Vector2(WINDOW_WIDTH / 2 - GameOverScreen.GAME_OVER_TEXTURE_POS_WIDTH/2, WINDOW_HEIGHT / 2 - 30);
 
@@ -173,7 +177,10 @@ namespace TrexRunner
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.White);
+            if (_skyManager == null)
+                GraphicsDevice.Clear(Color.White);
+            else
+                GraphicsDevice.Clear(_skyManager.ClearColor);
 
             _spriteBatch.Begin();
 

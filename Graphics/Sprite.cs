@@ -11,7 +11,7 @@ namespace TrexRunner.Graphics
     public class Sprite
     {
         //variables
-        public Texture2D Texture { get; private set; }
+        public Texture2D Texture { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
         public int Width { get; set; }
