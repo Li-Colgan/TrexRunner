@@ -17,7 +17,14 @@ namespace TrexRunner
 {
     public class TrexRunnerGame : Game
     {
+        public enum DisplayMode
+        {
+            Default,
+            Zoomed
+        }
+
         //consts
+        public const string GAME_TITLE = "T-Rex Runner";
         private const string ASSET_NAME_SPRITESHEET = "TrexSpritesheet";
         private const string ASSET_NAME_SFX_HIT = "hit";
         private const string ASSET_NAME_SFX_SCORE_REACHED = "score-reached";
@@ -32,7 +39,7 @@ namespace TrexRunner
         private const int SCORE_BOARD_POS_X = WINDOW_WIDTH - 130;
         private const int SCORE_BOARD_POS_Y = 10;
         private const string SAVE_PATH = "Save.dat";
-
+        public const int DISPLAY_ZOOM_FACTOR = 2;
 
         //fields
         private GraphicsDeviceManager _graphics;
@@ -62,9 +69,12 @@ namespace TrexRunner
         private Texture2D _invertedSpriteSheet;
         private DateTime _highScoreDate;
 
+        private Matrix _transformMatrix = Matrix.Identity;
+
         //props
         public GameState State { get; private set; }
-
+        public DisplayMode WindowDisplayMode { get; set; } = DisplayMode.Default;
+        public float ZoomFactor => WindowDisplayMode == DisplayMode.Default ? 1 : DISPLAY_ZOOM_FACTOR;
 
         public TrexRunnerGame()
         {
@@ -81,10 +91,12 @@ namespace TrexRunner
             // TODO: Add your initialization logic here
 
             base.Initialize();
-
+            Window.Title = GAME_TITLE;
             _graphics.PreferredBackBufferHeight = WINDOW_HEIGHT;
             _graphics.PreferredBackBufferWidth = WINDOW_WIDTH;
+            _graphics.SynchronizeWithVerticalRetrace = true;
             _graphics.ApplyChanges();
+
         }
 
         protected override void LoadContent()
@@ -190,6 +202,16 @@ namespace TrexRunner
             }
             _entityManager.Update(gameTime);
 
+            if(keyboardState.IsKeyDown(Keys.F8) && !_previousKeyboardState.IsKeyDown(Keys.F8))
+            {
+                ResetSaveState();
+            }
+
+            if (keyboardState.IsKeyDown(Keys.F12) && !_previousKeyboardState.IsKeyDown(Keys.F12))
+            {
+                ToggleDisplayMode();
+            }
+
             _previousKeyboardState = keyboardState;
         }
 
@@ -200,7 +222,7 @@ namespace TrexRunner
             else
                 GraphicsDevice.Clear(_skyManager.ClearColor);
 
-            _spriteBatch.Begin();
+            _spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: _transformMatrix);
 
             _entityManager.Draw(gameTime, _spriteBatch);
 
@@ -286,6 +308,32 @@ namespace TrexRunner
             {
                 Debug.WriteLine("An error occurred while loading the game: " + ex.Message);
             }
+        }
+
+        private void ResetSaveState()
+        {
+            _scoreBoard.HighScore = 0;
+            _highScoreDate = default(DateTime);
+            SaveGame();
+        }
+
+        private void ToggleDisplayMode()
+        {
+            if (WindowDisplayMode == DisplayMode.Default)
+            {
+                WindowDisplayMode = DisplayMode.Zoomed;
+                _graphics.PreferredBackBufferHeight = WINDOW_HEIGHT * DISPLAY_ZOOM_FACTOR;
+                _graphics.PreferredBackBufferWidth = WINDOW_WIDTH * DISPLAY_ZOOM_FACTOR;
+                _transformMatrix = Matrix.Identity * Matrix.CreateScale(DISPLAY_ZOOM_FACTOR, DISPLAY_ZOOM_FACTOR, 0);
+            }
+            else
+            {
+                WindowDisplayMode = DisplayMode.Default;
+                _graphics.PreferredBackBufferHeight = WINDOW_HEIGHT;
+                _graphics.PreferredBackBufferWidth = WINDOW_WIDTH;
+                _transformMatrix = Matrix.Identity;
+            }
+            _graphics.ApplyChanges();
         }
     }
 

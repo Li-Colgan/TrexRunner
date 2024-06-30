@@ -1,5 +1,6 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
 "C:/Users/justi/source/repos/TrexRunner/Content/button-press.mp3","C:/Users/justi/source/repos/TrexRunner/Content/bin/DesktopGL/Content/button-press.xnb","SoundEffectProcessor","SoundEffectContent",5178,25449,0.2264979
 "C:/Users/justi/source/repos/TrexRunner/Content/hit.mp3","C:/Users/justi/source/repos/TrexRunner/Content/bin/DesktopGL/Content/hit.xnb","SoundEffectProcessor","SoundEffectContent",7212,52073,0.1077599
+"C:/Users/justi/source/repos/TrexRunner/Content/Icon.ico","C:/Users/justi/source/repos/TrexRunner/Content/bin/DesktopGL/Content/Icon.xnb","TextureProcessor","Texture2DContent",9662,9301,0.1080863
 "C:/Users/justi/source/repos/TrexRunner/Content/score-reached.mp3","C:/Users/justi/source/repos/TrexRunner/Content/bin/DesktopGL/Content/score-reached.xnb","SoundEffectProcessor","SoundEffectContent",9250,101737,0.113486
 "C:/Users/justi/source/repos/TrexRunner/Content/TrexSpritesheet.png","C:/Users/justi/source/repos/TrexRunner/Content/bin/DesktopGL/Content/TrexSpritesheet.xnb","TextureProcessor","Texture2DContent",2433,335461,0.0303702

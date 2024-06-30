@@ -27,3 +27,4 @@ C:\Users\justi\source\repos\TrexRunner\obj\Debug\net6.0\refint\TrexRunner.dll
 C:\Users\justi\source\repos\TrexRunner\obj\Debug\net6.0\TrexRunner.pdb
 C:\Users\justi\source\repos\TrexRunner\obj\Debug\net6.0\TrexRunner.genruntimeconfig.cache
 C:\Users\justi\source\repos\TrexRunner\obj\Debug\net6.0\ref\TrexRunner.dll
+C:\Users\justi\source\repos\TrexRunner\bin\Debug\net6.0\Content\Icon.xnb

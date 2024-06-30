@@ -6,10 +6,12 @@
   <SourceFiles>
     <File>C:/Users/justi/source/repos/TrexRunner/Content/button-press.mp3</File>
     <File>C:/Users/justi/source/repos/TrexRunner/Content/hit.mp3</File>
+    <File>C:/Users/justi/source/repos/TrexRunner/Content/Icon.ico</File>
     <File>C:/Users/justi/source/repos/TrexRunner/Content/score-reached.mp3</File>
     <File>C:/Users/justi/source/repos/TrexRunner/Content/TrexSpritesheet.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

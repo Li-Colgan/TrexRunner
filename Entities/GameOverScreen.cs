@@ -35,7 +35,7 @@ namespace TrexRunner.Entities
         private Vector2 ButtonPosition => Position + new Vector2(GAME_OVER_TEXTURE_POS_WIDTH / 2 - BUTTON_TEXTURE_POS_WIDTH / 2, GAME_OVER_TEXTURE_POS_HEIGHT + 20);
 
         private Rectangle ButtonBounds =>
-            new Rectangle(ButtonPosition.ToPoint(), new Point(BUTTON_TEXTURE_POS_WIDTH, BUTTON_TEXTURE_POS_HEIGHT));
+            new Rectangle((ButtonPosition * _game.ZoomFactor).ToPoint(), new Point((int)(BUTTON_TEXTURE_POS_WIDTH * _game.ZoomFactor), (int)(BUTTON_TEXTURE_POS_HEIGHT * _game.ZoomFactor)));
         public int DrawOrder => 100;
 
         public GameOverScreen(Texture2D spriteSheet, TrexRunnerGame game)
